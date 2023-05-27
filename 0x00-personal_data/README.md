@@ -14,4 +14,13 @@ Arguments:
 
 > The function should use a regex to replace occurrences of certain field values.
   filter_datum should be less than 5 lines long and use re.sub to perform the substitution with a single regex.
--------------------------------------------------------------------
+-------------------------------------------------------------------  
+
+##Task 1:Log formatter
+------------------------------------------------------
+- Update the class to accept a list of strings fields constructor argument.  
+
+- Implement the format method to filter values in incoming log records using filter_datum. Values for fields in fields should be filtered.  
+
+- DO NOT extrapolate FORMAT manually. The format method should be less than 5 lines long.
+---------------------------------
