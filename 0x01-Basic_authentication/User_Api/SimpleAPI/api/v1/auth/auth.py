@@ -14,13 +14,22 @@ class Auth():
         """
         Update later
         """
-        return False
+        if path is None:
+            return True
+        if excluded_paths is None or len(excluded_paths) == 0:
+            return True
+        if path in excluded_paths or path + '/' in excluded_paths:
+            return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """
         Returns None
         """
         if request is None:
+            return None
+
+        if 'Authorization' not in request.headers:
             return None
 
         auth_header = request.headers.get('Authorization')
@@ -35,7 +44,7 @@ class Auth():
         if request is None:
             return None
 
-        user = request.users.get('User')
+        #user = request.user.get('User')
 
-        return user
+        #return user
 
