@@ -3,6 +3,7 @@
 Class that inherits from Auth
 """
 
+import base64
 from api.v1.auth.auth import Auth
 from models.user import User
 from typing import TypeVar
@@ -48,6 +49,12 @@ class BasicAuth(Auth):
         if base64_authorization_header is None:
             return None
         if not isinstance(base64_authorization_header, str):
+            return None
+        try:
+            encode_header = base64_authorization_header.encode('utf-8')
+            decoded_header = base64.b64decode(encode_header)
+            return decoded_header.decode('utf-8')
+        except Exception:
             return None
 
     def extract_user_credentials(
