@@ -31,9 +31,9 @@ class BasicAuth(Auth):
         if not authorization_header.startswith('Basic '):
             return None
 
-        auth_headers = authorization_header.split('Basic', 1)
+        auth_headers = authorization_header.split(' ')[1]
 
-        return auth_headers[1]
+        return auth_headers
 
     def decode_base64_authorization_header(
                                            self,
