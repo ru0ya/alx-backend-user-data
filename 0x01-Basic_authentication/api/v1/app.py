@@ -37,7 +37,7 @@ def before_request():
 
     if not (auth.require_auth(request.path, excluded_paths)):
         return
-    
+
     auth_header = auth.authorization_header(request)
     if auth_header is None:
         abort(401, description='Unauthorized')
