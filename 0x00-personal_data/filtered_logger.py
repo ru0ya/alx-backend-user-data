@@ -5,10 +5,28 @@ Obsufication
 
 import logging
 import re
+import os
 from typing import List
+import mysql.connector
 
 
 PII_FIELDS = ["name", "email", "phone", "ssn", "password"]
+PERSONAL_DATA_DB_USERNAME = "root"
+PERSONAL_DATA_DB_PASSWORD = " "
+PERSONAL_DATA_DB_HOST = "localhost"
+
+
+def get_db():
+    """
+    Function that returns a connector to the database
+    """
+    username = os.get_env("PERSONAL_DATA_DB_USERNAME")
+    password = os.get_env("PERSONAL_DATA_DB_PASSWORD")
+    host = os.get_env("PERSONAL_DATA_DB_HOST")
+
+    PERSONAL_DATA_DB_NAME = mysql.connector.connect(
+            host, username, password)
+
 
 
 def filter_datum(fields: List[str], redaction: str,
