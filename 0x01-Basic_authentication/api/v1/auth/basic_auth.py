@@ -32,8 +32,6 @@ class BasicAuth(Auth):
             return None
 
         auth_headers = authorization_header.split('Basic', 1)
-        if len(auth_headers) != 2:
-            return None
 
         return auth_headers[1]
 
