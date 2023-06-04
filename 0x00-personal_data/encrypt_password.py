@@ -6,7 +6,7 @@ passowrd is valid
 import bcrypt
 
 
-def hash_password(password: str) -> str:
+def hash_password(password: str) -> bytes:
     """
     Function that encrypts password using bcrypt
     Arguments: password(str)
