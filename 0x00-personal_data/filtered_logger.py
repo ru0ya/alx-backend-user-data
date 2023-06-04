@@ -6,11 +6,12 @@ Obsufication
 import logging
 import re
 import os
+import bcrypt
 from typing import List
 import mysql.connector
 
 
-PII_FIELDS = ["name", "email", "phone", "ssn", "password"]
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 PERSONAL_DATA_DB_USERNAME = "root"
 PERSONAL_DATA_DB_PASSWORD = " "
 PERSONAL_DATA_DB_HOST = "localhost"
@@ -28,9 +29,10 @@ def get_db():
             host, username, password)
 
 
-
-def filter_datum(fields: List[str], redaction: str,
-                 message: str, separator: str):
+def filter_datum(fields: List[str],
+                 redaction: str,
+                 message: str,
+                 separator: str) -> str:
     """
     Function that returns log message obfuscated
 
@@ -105,6 +107,7 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """
+    Function that fetches database credentials
     """
     user = os.getenv('PERSONAL_DATA_DB_USERNAME') or "root"
     passwd = os.getenv('PERSONAL_DATA_DB_PASSWORD') or ""
