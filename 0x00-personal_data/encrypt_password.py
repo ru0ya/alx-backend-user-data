@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-
+"""
+Methods that encrypt password and  checks if
+passowrd is valid
+"""
 import bcrypt
 
 
 def hash_password(password: str) -> str:
     """
+    Function that encrypts password using bcrypt
     Arguments: password(str)
     Returns: salted, hashed password
     """
