@@ -5,6 +5,7 @@ create a new authentication mechanism
 """
 
 from api.v1.auth.auth import Auth
+from api.v1.views import app_views
 import uuid
 
 
@@ -58,4 +59,25 @@ class SessionAuth(Auth):
 
         Returns: User instance based on cookie value
         """
-        pass
+        cookie = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(cookie)
+        if user_id is None:
+            return None
+
+        user = User.get(user_id)
+
+@app_views.route('auth_session/login', methods=['POST'], strict_slashes=False)
+def login():
+    """
+    new route
+    """
+    user_email = request.form.get(email)
+    user_pwd = request.form.get(password)
+
+    if user_email is None or is not user_email:
+        return jsonify({"error": "email missing"}), 400
+    if user_pwd is None or is not user_pwd:
+        return jsonify({"error": "password missing"}), 400
+
+
+
