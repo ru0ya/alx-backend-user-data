@@ -65,19 +65,3 @@ class SessionAuth(Auth):
             return None
 
         user = User.get(user_id)
-
-@app_views.route('auth_session/login', methods=['POST'], strict_slashes=False)
-def login():
-    """
-    new route
-    """
-    user_email = request.form.get(email)
-    user_pwd = request.form.get(password)
-
-    if user_email is None or is not user_email:
-        return jsonify({"error": "email missing"}), 400
-    if user_pwd is None or is not user_pwd:
-        return jsonify({"error": "password missing"}), 400
-
-
-
