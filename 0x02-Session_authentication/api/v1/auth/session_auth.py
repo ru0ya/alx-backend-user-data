@@ -55,7 +55,7 @@ class SessionAuth(Auth):
         """
         Function that returns User instance based on a cookie value
 
-        Arguments: request
+        Arguments: requ
 
         Returns: User instance based on cookie value
         """
