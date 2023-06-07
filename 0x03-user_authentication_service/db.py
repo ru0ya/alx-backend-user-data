@@ -6,7 +6,8 @@ from sqlalchemy import create_engine
 from asqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import session
-from sqlalchemy.orm.exc import NoResultFound, InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 
 from user import Base
 
@@ -25,7 +26,7 @@ class DB:
         self.__session = sessionmaker(bind=self._engine)
 
     @property
-    def _sessiom(self) -> Session:
+    def _session(self) -> Session:
         """
         Memoized session object
         """
@@ -38,27 +39,40 @@ class DB:
         """
         Adds new user
         """
-        session = self.Session()
+        self.__session = self.Session()
         user = User(email=email, password=hashed_password)
-        session.add(user)
-        session.commit()
+        self.__session.add(user)
+        self. __session.commit()
         return user
 
     def find_user_by(self, **kwargs):
         """
-        Finds user 
+        Finds user
         Arguments: **kwargs arguments
         Returns: first row found in users
         """
         try:
-            _table = getattr(self, "users")
+            user = self.__session.query(User).filter_by(**kwargs).first()
 
-            conditions = []
+            if user is None:
+                raise NoResultFound
+
+            return user
+        except InvalidRequestError:
+            raise InvalidRequestError
+
+    def update_user(user_id: int, **kwargs) -> None:
+        """
+        Updates user
+        Args: - user_id(int) id to locate user by
+              - **kwargs abitrary keywords
+        Returns: None
+        """
+        user = self.find_user_by(id=user_id)
+        if user:
             for key, value in kwargs.items():
-                condition = f"{key} = {value}"
-                conditions.append(condition)
+                setattr(user, key, value)
 
-            query = f"SELECT * FROM {_table} WHERE {' AND '.join(conditions)}
-            LIMIT 1"
-
-            result = self.
+            self.__session.commit()
+        else:
+            raise ValueError
