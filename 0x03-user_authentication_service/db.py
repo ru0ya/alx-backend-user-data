@@ -39,10 +39,10 @@ class DB:
         """
         Adds new user
         """
-        self.__session = self.Session()
+        session = self.Session()
         user = User(email=email, password=hashed_password)
-        self.__session.add(user)
-        self. __session.commit()
+        session.add(user)
+        session.commit()
         return user
 
     def find_user_by(self, **kwargs):
@@ -52,7 +52,7 @@ class DB:
         Returns: first row found in users
         """
         try:
-            user = self.__session.query(User).filter_by(**kwargs).first()
+            user = self.session.query(User).filter_by(**kwargs).first()
 
             if user is None:
                 raise NoResultFound
@@ -73,6 +73,6 @@ class DB:
             for key, value in kwargs.items():
                 setattr(user, key, value)
 
-            self.__session.commit()
+            self.session.commit()
         else:
             raise ValueError
