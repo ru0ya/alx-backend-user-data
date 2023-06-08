@@ -24,6 +24,11 @@ class DB:
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = sessionmaker(bind=self._engine)
+        self.db = DB()
+
+
+    def find_user_by(self, email):
+        return self.db.find_user_by()
 
     @property
     def _session(self) -> Session:
@@ -75,4 +80,5 @@ class DB:
 
             self.session.commit()
         else:
+            :wq
             raise ValueError

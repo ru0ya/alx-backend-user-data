@@ -45,3 +45,13 @@ class Auth:
             new_user = User('email', 'password')
             self._db.session.add(new_user)
             self._db.session.commit()
+
+    def valid_login(email: str, password: str) -> bool:
+        """
+        Function to validate users credentials
+
+        Args: - email(str): users email
+              - password(str): users password
+        Returns: True if user password matches else false
+        """
+        user = DB.find_user_by
