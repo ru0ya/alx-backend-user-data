@@ -37,4 +37,11 @@ class Auth:
             - password(str)
         Returns: User
         """
-
+        user = self.find_user_by(email)
+        if user:
+            raise ValueError(f"User {email} already exists.")
+        else:
+            passwd = self._hash_password(password)
+            new_user = User('email', 'password')
+            self._db.session.add(new_user)
+            self._db.session.commit()
