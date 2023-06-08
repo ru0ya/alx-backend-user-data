@@ -23,12 +23,7 @@ class DB:
         self._engine = create_engine("sqlite:///a.db", echo=True)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
-        self.__session = sessionmaker(bind=self._engine)
-        self.db = DB()
-
-
-    def find_user_by(self, email):
-        return self.db.find_user_by()
+        self.__session = None
 
     @property
     def _session(self) -> Session:
@@ -44,10 +39,9 @@ class DB:
         """
         Adds new user
         """
-        session = self.Session()
         user = User(email=email, password=hashed_password)
-        session.add(user)
-        session.commit()
+        self._session.add(user)
+        self._session.commit()
         return user
 
     def find_user_by(self, **kwargs):
@@ -57,7 +51,7 @@ class DB:
         Returns: first row found in users
         """
         try:
-            user = self.session.query(User).filter_by(**kwargs).first()
+            user = self._session.query(User).filter_by(**kwargs).first()
 
             if user is None:
                 raise NoResultFound
@@ -78,7 +72,6 @@ class DB:
             for key, value in kwargs.items():
                 setattr(user, key, value)
 
-            self.session.commit()
+            self._session.commit()
         else:
-            :wq
             raise ValueError

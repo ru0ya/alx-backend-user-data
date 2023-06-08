@@ -13,11 +13,18 @@ AUTH = Auth()
 
 @app.route('/', methods=['GET'])
 def basic():
+    """GET /
+    Return: - message
+    """
     return jsonify({"message": "Bienvenue"})
 
 
 @app.route('users/<email>/<password>', methods=['POST'])
 def register_user(email, password):
+    """
+    POST/ users
+    Return: account creation payload
+    """
     user = AUTH.find_user_by(email)
     try:
         if user is None:

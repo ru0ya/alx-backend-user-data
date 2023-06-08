@@ -37,7 +37,7 @@ class Auth:
             - password(str)
         Returns: User
         """
-        user = self.find_user_by(email)
+        user = self._db.find_user_by(email=email)
         if user:
             raise ValueError(f"User {email} already exists.")
         else:
@@ -54,4 +54,4 @@ class Auth:
               - password(str): users password
         Returns: True if user password matches else false
         """
-        user = DB.find_user_by
+        pass
