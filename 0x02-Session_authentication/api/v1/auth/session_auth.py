@@ -30,7 +30,7 @@ class SessionAuth(Auth):
 
         id = uuid.uuid4()
 
-        SessionAuth.user_id_by_session_id[id] = user_id
+        self.user_id_by_session_id[id] = user_id
 
         return id
 
@@ -45,7 +45,7 @@ class SessionAuth(Auth):
         if session_id is None or not isinstance(session_id, str):
             return None
 
-        source = SessionAuth.user_id_by_session_id
+        source = self.user_id_by_session_id
 
         users_id = source.get('session_id')
 
@@ -63,9 +63,6 @@ class SessionAuth(Auth):
         if cookie is None:
             return None
         user_id = self.user_id_for_session_id(cookie)
-        if user_id is None:
-            return None
-
         user = User.get(user_id)
         return user
 
