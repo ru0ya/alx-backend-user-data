@@ -3,7 +3,10 @@
 Authentication
 """
 import bcrypt
+import uuid
 from db import DB
+from user import User
+from sqlalchemy.orm.exc import NoResultFound
 
 
 def _hash_password(password: str) -> bytes:
@@ -16,9 +19,16 @@ def _hash_password(password: str) -> bytes:
 
     salt = bcrypt.gensalt()
 
-    hash = bcrypt.hashpw(bytes, salt)
+    hashed_password = bcrypt.hashpw(bytes, salt)
 
-    return hash
+    return hashhed_password
+
+
+def _generate_uuid() -> str:
+    """
+    Generates a unique id
+    """
+    return str(uuid.uuid4())
 
 
 class Auth:
@@ -39,12 +49,13 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
+            raise ValueError("User {} already exists".format(email))
         except NoResultFound:
+            hashed_password = _hash_password(password)
             return self._db.add_user(
-                    email,
-                    self._hash_password(password)
+                    email=email,
+                    hashed_password=hashed_password
                     )
-        raise ValueError("User {} already exists".format(email))
 
     def valid_login(email: str, password: str) -> bool:
         """
@@ -54,4 +65,24 @@ class Auth:
               - password(str): users password
         Returns: True if user password matches else false
         """
-        pass
+        try:
+            user = self._db.find_user_by(email=email)
+            hashed_password = user.password.encode('utf-8')
+            input_password = password.encode('utf-8')
+            return bcrypt.checkpw(input_password, hashed_password)
+        except NoResultFound:
+            return False
+
+    def _generate_uuid(self) -> str:
+        """
+        Calls function to genrate unique id
+        """
+        return _generate_uuid()
+
+    def create_session(self, email: str) -> str:
+        """
+        Generares new session ID
+        """
+        session_id = self._generate_uuid()
+        self._db.update_user(email=email, session_id=session_id)
+        return session_id

@@ -43,10 +43,10 @@ class DB:
             user = User(email=email, password=hashed_password)
             self._session.add(user)
             self._session.commit()
+            return user
         except Exception:
             self._session.rollback()
-            user = None
-        return user
+            return None
 
     def find_user_by(self, **kwargs):
         """
@@ -74,7 +74,10 @@ class DB:
         user = self.find_user_by(id=user_id)
         if user:
             for key, value in kwargs.items():
-                setattr(user, key, value)
+                if hasattr(user, key):
+                    setattr(user, key, value)
+                else:
+                    raise ValueError(f"Invalid user attribute: {key}")
 
             self._session.commit()
         else:
