@@ -45,9 +45,7 @@ class SessionAuth(Auth):
         if session_id is None or not isinstance(session_id, str):
             return None
 
-        source = self.user_id_by_session_id
-
-        users_id = source.get('session_id')
+        users_id = self.user_id_by_session_id.get(session_id)
 
         return users_id
 

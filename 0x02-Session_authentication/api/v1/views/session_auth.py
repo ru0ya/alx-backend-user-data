@@ -5,25 +5,25 @@ from flask import abort, jsonify, request
 from models.user import User
 from os import getenv
 
+
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
 def login() -> str:
     """ View for route /auth_session/login, method POST """
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+    user_email = request.form.get('email')
+    user_password = request.form.get('password')
 
-    if not email:
+    if not user_email:
         return jsonify({"error": "email missing"}), 400
-    if not password:
+    if not user_password:
         return jsonify({"error": "password missing"}), 400
 
-    user = User.search({'email': email})
+    user = User.search({'email': user_email})
 
     if not user:
         return jsonify({"error": "no user found for this email"}), 404
 
     for u in user:
-        if u.is_valid_password(password):
+        if u.is_valid_password(user_password):
             from api.v1.app import auth
             session_id = auth.create_session(u.id)
             user_json = jsonify(u.to_json())
