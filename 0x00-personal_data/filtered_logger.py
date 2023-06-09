@@ -64,7 +64,9 @@ class RedactingFormatter(logging.Formatter):
 
     def __init__(self, fields):
         """
-        Accepts a list of strings fields constructor argument
+        Constructor method
+        Args:
+            - fields: list of fields to redact in log messages
         """
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
