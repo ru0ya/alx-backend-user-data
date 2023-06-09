@@ -31,8 +31,8 @@ class DB:
         Memoized session object
         """
         if self.__session is None:
-            DBSession = sessionmaker(bind=self._engine)
-            self.__sesson = DBSession()
+            DB._session = sessionmaker(bind=self._engine)
+            self.__session = DB._session()
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
