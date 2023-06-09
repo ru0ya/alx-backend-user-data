@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Authentication
-"""
 import bcrypt
 import uuid
 from db import DB
@@ -21,7 +18,7 @@ def _hash_password(password: str) -> bytes:
 
     hashed_password = bcrypt.hashpw(bytes, salt)
 
-    return hashhed_password
+    return hashed_password
 
 
 def _generate_uuid() -> str:
@@ -35,10 +32,11 @@ class Auth:
     """
     Auth class to interact with the authentication database.
     """
+
     def __init__(self):
         self._db = DB()
 
-    def register_user(email: str, password: str) -> User:
+    def register_user(self, email: str, password: str) -> User:
         """
         Registers users using email
 
@@ -57,7 +55,7 @@ class Auth:
                     hashed_password=hashed_password
                     )
 
-    def valid_login(email: str, password: str) -> bool:
+    def valid_login(self, email: str, password: str) -> bool:
         """
         Function to validate users credentials
 
@@ -75,13 +73,13 @@ class Auth:
 
     def _generate_uuid(self) -> str:
         """
-        Calls function to genrate unique id
+        Calls function to generate unique id
         """
         return _generate_uuid()
 
     def create_session(self, email: str) -> str:
         """
-        Generares new session ID
+        Generates new session ID
         """
         session_id = self._generate_uuid()
         self._db.update_user(email=email, session_id=session_id)
@@ -100,7 +98,7 @@ class Auth:
 
     def destroy_session(self, user_id: int) -> None:
         """
-        Updates users session id to None
+        Updates user's session id to None
         """
         self._db.update_user(user_id=user_id, session_id=None)
 
@@ -108,14 +106,18 @@ class Auth:
         """
         Finds user corresponding to provided email
         """
-        user = self._db.find)_user_by(email=email)
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            raise ValueError("User not found")
+
         reset_token = _generate_uuid()
         self._db.update_user(user_id=user.id, reset_token=reset_token)
         return reset_token
 
     def update_password(self, reset_token: str, password: str) -> None:
         """
-        Finds user corresponding to provided email
+        Finds user corresponding to provided reset_token
         """
         try:
             user = self._db.find_user_by(reset_token=reset_token)
@@ -126,5 +128,5 @@ class Auth:
         self._db.update_user(
                 user_id=user.id,
                 hashed_password=hashed_password,
-                reset_token=Nome
+                reset_token=None
                 )
