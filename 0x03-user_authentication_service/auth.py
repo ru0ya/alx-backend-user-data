@@ -37,14 +37,14 @@ class Auth:
             - password(str)
         Returns: User
         """
-        user = self._db.find_user_by(email=email)
-        if user:
-            raise ValueError(f"User {email} already exists.")
-        else:
-            passwd = self._hash_password(password)
-            new_user = User('email', 'password')
-            self._db.session.add(new_user)
-            self._db.session.commit()
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return self._db.add_user(
+                    email,
+                    self._hash_password(password)
+                    )
+        raise ValueError("User {} already exists".format(email))
 
     def valid_login(email: str, password: str) -> bool:
         """

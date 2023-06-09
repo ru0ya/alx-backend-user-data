@@ -38,22 +38,18 @@ def register_user(email, password):
 
 
 def valid_login(email: str, password: str) -> bool:
-        """
-        Credentials validation
+    """
+    Credentials validation
 
-        Args: - email(str)
-              - password(str)
+    Args: - email(str)
+         - password(str)
 
-        Returns: Boolean
-        """
-        user = AUTH.find_user_by(email)
+    Returns: Boolean
+    """
+    user = AUTH.find_user_by(email)
 
-        if user:
-            password = user.password.encode('utf-8')
-
-
-
-
+    if user:
+        password = user.password.encode('utf-8')
 
 
 if __name__ == "__main__":
