@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.sql.expression import tuple_
 
 from user import Base, User
 
@@ -38,6 +39,10 @@ class DB:
     def add_user(self, email: str, hashed_password: str) -> User:
         """
         Adds new user
+        Args: - email: users email
+             - hashed_password: Hashed password of user
+        Returns:
+            - User object if user is added succesfully, otherwise None
         """
         try:
             user = User(email=email, password=hashed_password)
@@ -68,7 +73,8 @@ class DB:
             raise NoResultFound()
         return result
 
-    def update_user(user_id: int, **kwargs) -> None:
+    def update_user(self,
+            user_id: int, **kwargs) -> None:
         """
         Updates user
         Args: - user_id(int) id to locate user by
@@ -83,6 +89,6 @@ class DB:
                 else:
                     raise ValueError(f"Invalid user attribute: {key}")
 
-        self._session.commit()
+            self._session.commit()
         else:
             raise ValueError
