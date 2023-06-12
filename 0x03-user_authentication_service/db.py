@@ -60,19 +60,15 @@ class DB:
         Arguments: **kwargs arguments
         Returns: first row found in users
         """
-        fields, values = [], []
-        for key, value in kwargs.items():
-            if hasattr(User, key):
-                fields.append(getattr(User, key))
-                values.append(value)
-            else:
-                raise InvalidRequestError()
-        result = self._session.query(User).filter(
-                tuple_(*fields).in_([tuple(values)])
-                ).first()
-        if result is None:
-            raise NoResultFound()
-        return result
+        try:
+            query = self._session.query(User)
+            for k, v in kwargs.items():
+                if k not in User.__dict__:
+                    raise InvalidRequestError
+                query = query.filter(getattr(User, k) == v)
+            return query.first()
+        except NoResultFound:
+            raise NoResultFound
 
     def update_user(self,
                     user_id: int, **kwargs) -> None:
@@ -84,13 +80,13 @@ class DB:
         """
         user = self.find_user_by(id=user_id)
 
-        if not user:
+        if user is None:
             return
         for key, value in kwargs.items():
             if hasattr(user, key):
                 setattr(user, key, value)
             else:
-                raise ValueError(f"Invalid user attribute: {key}")
+                raise ValueError
 
         self._session.commit()
         else:
