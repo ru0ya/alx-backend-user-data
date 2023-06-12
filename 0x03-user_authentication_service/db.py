@@ -74,7 +74,7 @@ class DB:
         return result
 
     def update_user(self,
-            user_id: int, **kwargs) -> None:
+                    user_id: int, **kwargs) -> None:
         """
         Updates user
         Args: - user_id(int) id to locate user by
