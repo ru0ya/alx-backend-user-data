@@ -51,6 +51,7 @@ class DB:
         except Exception:
             self._session.rollback()
             return None
+        
         return user
 
     def find_user_by(self, **kwargs):
@@ -82,13 +83,16 @@ class DB:
         Returns: None
         """
         user = self.find_user_by(id=user_id)
-        if user:
-            for key, value in kwargs.items():
-                if hasattr(user, key):
-                    setattr(user, key, value)
-                else:
-                    raise ValueError(f"Invalid user attribute: {key}")
+        
+        if not user:
+            return
+        
+        for key, value in kwargs.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
+            else:
+                raise ValueError(f"Invalid user attribute: {key}")
 
-            self._session.commit()
+        self._session.commit()
         else:
             raise ValueError
